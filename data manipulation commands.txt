@@ -1,0 +1,345 @@
+
+<library>.__version__
+
+
+import sys
+import scipy
+
+
+Method #1
+from sklearn import as datasets 
+dataset=datasets.load_<Dataset Name>()
+df=pd.DataFrame(dataset.data)
+
+Method #2
+from sklearn.datasets import load_<Dataset Name>
+dataset=load_<Dataset Name>()
+df=pd.DataFrame(dataset.data)
+
+
+Method #3
+sns.load_dataset('<Dataset Name>')
+
+<Dataset Name>: iris, digits, diabetes, https://github.com/mwaskom/seaborn-data
+
+
+
+
+#file=list / Dictionary / Array
+df=pd.read_csv("file", delimiter=",", index_col=True/False, header=None/0)
+df=pd.read_json("file")
+df=pd.DataFrame(file, columns=columns_name, index=rows_name, dtype=None, copy=None)  
+#file=list / array
+df=pd.Series(file) 
+
+
+df.info()
+df.describe()
+df.head()
+df.tail()
+df.to_string()
+df.isnull()
+df.notnull()
+df.abs()
+df.corr()
+df.fillna(value, inplace=True)
+df.copy() - right way to copy
+df.astype('int16') - type casting
+df.reshape(a.shape) #numpy function
+df.drop(["Column 1"], axis=1)
+df.unique()
+df.dropna(inplace=True, how="all", subset=['Column Name'])
+df.sort_values('Column Name', ascending=False)
+df.isnull().sum()
+pd.to_numeric(df["Column Name"])
+df=df1.append(df2)
+
+
+df['column'].mean()
+df['column'].median()
+df['column'].mode()
+
+
+To convert multiple entry to multiple rows
+df['column'].str.split(",")
+df.explode('column')
+
+df.groupby("column").groups
+df.groupby("column").first()
+df.groupby("column").sum()
+df.groupby("column").size()
+
+df1.merge(df2, how='left', left_on='column name', right_on='column name', on='common column')
+new_data=pd.merge(data1, data2, how='outer', indicator=True)
+pd.concat([alldataset, dataset])
+
+
+df['species']=df['species'].map({'versicolor':0, 'virginica': 1})
+df["Sex"].replace(["male", "female"], [0, 1], inplace=True)
+df=pd.get_dummies(df, columns=['Embarked'])
+
+df[i].str.strip()
+
+
+df.shape
+df.columns
+df.T
+df.index
+df.dtypes
+df.empty
+df.ndim
+df.size
+df.style
+df.values
+df.item
+
+df[["column 1", "column 2"]] [row 1:row 2]
+df["column 1"]["row 1":"row 2"]
+df.iloc["column 1":"column 2"]
+df.loc[]
+df.at[row, column]
+df.loc[]
+df[row_start:row_end:step, col_start:col_end:step]
+
+
+import csv
+file=open("file name", "r")
+list(csv.reader(file, delimiter=','))
+[*csv.DictReader(file)]
+file.close()
+
+
+df[0]=df.columns
+
+
+pd.options.display.max_rows=9999
+
+
+df>2 (boolean masking)
+df[df>2] - advanced indexing
+
+
+numeric_only=None/True
+
+warning code
+
+
+np.array()
+np.zeros(<array shape>)
+np.ones(<array shape>)
+np.full((<array shape>), <val>)
+np.full_like(<array>, <val>)
+np.random.rand(<array shape>) - #[0,1)
+np.random.random_sample(<array shape>)  - #[0.0,1.0)
+np.random.randint(<start>, <end>, size=<array shape>, dtype=int)
+np.random.randn(<array shape>) - #standard normal values
+np.identity(<val>)
+np.sin(val)
+np.cos(val)
+np.matmul(<array 1>, <array 2>)
+np.min(<array>, axis=0)
+np.max(<array>, axis=0)
+np.vstack((<ARRAY 1>, <ARRAY 2>)) - concatenation
+np.mean(<array>)
+
+np.genfromtxt("iris.csv", delimiter)
+
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test=train_test_split(X, Y, test_size=0.33, random_state=42)
+
+
+
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+model=DecisionTreeClassifier()
+
+
+model.fit(X_train, Y_train)
+Y_pred=model.predict(X_test)
+
+
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, mean_squared_error, cross_val_score, r2_score, precision_score, recall_score, f1_score, roc_curve, auc
+score=accuracy_score(Y_pred, Y_test)
+report=classification_report(Y_pred, Y_test)
+mse=cross_val_score(model, X_train, Y_train, scoring='neg_mean_squared_error', cv=5)
+false_positive_rate, true_positive_rate, thresholds=roc_curve(Y_test, Y_pred)
+roc_auc=auc(false_positive_rate, true_positive_rate)
+
+from sklearn.decomposition import PCA
+pca=PCA(n_components=2)
+pca.fit(scaled_data)
+PCA(copy=True, n_components=2, whiten=False)
+x_pca=pca.transform(scaled_data)
+scaled_data.shape
+x_pca.shape
+
+
+from sklearn.model_selection import GridSearchCV
+parameter={'criterion':['gini', 'entropy', 'log_loss'], 'splitter':['best', 'random'], 'max_depth':[1, 2, 3, 4, 5], 'max_features':['auto', 'sqrt', 'log2']} #Decision Tree
+parameter={'penalty':['l1','l2','l3'], 'C':[1, 2, 3, 4, 5, 10, 20, 30, 40, 50, 100], 'max_iter':[100, 200, 300]} #Logistic Regression
+cv=GridSearchCV(model, param_grid=parameter, cv=5, scoring='accuracy')
+cv.fit(X_train, Y_train)
+cv.best_params_
+cv.best_score_
+Y_pred=cv.predict(X_test)
+
+
+dup_dataset=dataset[dataset["Order ID"].duplicated(keep=False)] ### DataFrame with duplicate only
+
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
+scaler=StandardScaler() #MinMaxScaler()
+X_train=scaler.fit_transform(X_train)
+X_test=scaler.transform(X_test)
+
+
+
+def getcol(x):
+    x1=x.split(",")[1]
+    x2=x.split(',')[2][0:3]
+    return x1+" "+x2
+#dataset["City"]=dataset["Purchase Address"].apply(lambda x: x.split(",")[1]) # need to understand
+dataset["City"]=dataset["Purchase Address"].apply(lambda x: getcol(x))
+
+dataset["Time"]=dataset["Order Date"].apply(lambda x: x.split(" ")[1])
+dataset["Order ID"]=dataset["Order ID"].apply(lambda x: int(x))
+dup_dataset["Grouped"]=dup_dataset.groupby("Order ID")["Product"].transform(lambda x: ",".join(x))
+
+dup_dataset=dup_dataset[["Order ID", "Grouped"]].drop_duplicates()
+
+dataset["Time"]=pd.to_datetime(dataset["Time"]).dt.hour
+
+%matplotlib inline
+
+plt.figure(figsize=(a, b), dpi=300)
+plt.plot(x, y, label='2x', color='y', linestyle='--', linewidth=2, marker='.', markersize=1, markeredgecolor='r', 'r^--')
+plt.title("test graph", fontdict={'fontname':'Comic Sans MS', 'fontsize':25})
+plt.xlabel("Number", fontdict={'fontname':'Comic Sans MS', 'fontsize':25})
+plt.xticks(a, rotation="vertical", size=8)
+plt.legend(gas.columns, title="Country") 
+plt.savefig("filename", dpi=200)
+plt.style.use("default")
+plt.style.use('fivethirtyeight')
+plt.show()
+plt.grid()
+
+
+plt.scatter(x, y, c=cancer['target'], cmap='plasma')
+
+bars=plt.bar(labels, values, color='blue',edgecolor='black') 
+bars[0].set_hatch('/')
+
+plt.hist(fifa.Overall, bins=bins, color="#8F00FF")
+
+plt.pie([left, right], labels=["left", "right"], colors=["red", "green"], autopct='%.2f %%') 
+
+light=fifa[fifa.Weight<125].count()[0]
+
+fifa.Weight=[int(x.strip('lbs')) if type(x) == str else x for x in fifa.Weight] ## need to understand
+
+plt.pie([light, light_medium, medium, heavy_medium, heavy], labels=["light", "light medium", "medium", "heavy medium", "heavy"], autopct='%.2f %%', pctdistance=0.8, 
+explode=[.4, 1, 0, 0, .4])
+
+plt.boxplot([barcelona, madrid], labels=["barcelona", "madrid"])
+
+tree.plot_tree(model, filled=True)
+
+
+from pandas.plotting import scatter_matrix
+dataset.plot(kind='box', subplots=True, layout=(2, 2), sharex=False, sharey=False)
+dataset.hist()
+pd.plotting.scatter_matrix(df)
+
+sns.displot(reg_pred-Y_test, kind='kde')
+sns.pairplot(df, hue='TARGET CLASS') #hue='species'
+
+
+
+#Spot Check Algo
+
+models=[]
+models.append(("LR", LogisticRegression()))
+models.append(("LDA", LinearDiscriminantAnalysis()))
+models.append(("KNN", KNeighborsClassifier()))
+models.append(("CART", DecisionTreeClassifier()))
+models.append(("NB", GaussianNB()))
+models.append(("SVM", SVC()))
+
+#Evaluate each model in turn
+
+results=[]
+names=[]
+for name, model in models:
+    kfold=model_selection.KFold(n_splits=10, shuffle=True, random_state=seed)
+    cv_result=model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
+    results.append(cv_results)
+    names.append(name)
+    msg="%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
+    print(msg)
+
+
+from matplotlib.legend_handler import HandlerLine2D
+plt.legend(handler_map={line1: HandlerLine2D(numpoints=2)})
+
+
+# Comparision hyper parameters of Random Forest
+
+n_estimators=[1, 2, 4, 8, 16, 32, 64, 100, 200]
+train_results=[]
+test_results=[]
+
+for estimator in n_estimators:
+    rf=RandomForestClassifier(n_estimators=estimator, n_jobs=-1)
+    rf.fit(X_train, Y_train)
+    train_pred=rf.predict(X_train)
+    false_positive_rate, true_positive_rate, thresholds=roc_curve(Y_train, train_pred)
+    roc_auc=auc(false_positive_rate, true_positive_rate)
+    train_results.append(roc_auc)
+    Y_pred=rf.predict(X_test)
+    false_positive_rate, true_positive_rate, thresholds=roc_curve(Y_test, Y_pred)
+    roc_auc=auc(false_positive_rate, true_positive_rate)
+    test_results.append(roc_auc)
+
+
+## Very Special Method
+
+from itertools import combinations
+from collections import Counter
+
+count=Counter()
+for row in dup_dataset["Grouped"]:
+    row_list=row.split(',')
+    count.update(Counter(combinations(row_list, 2)))
+
+print(count.most_common(10)) 
+#print(count)
+
+
+
+
+x=np.linspace(-5.0, 5.0, 100)
+y=np.sqrt(10**2-x**2)
+y=np.hstack([y, -y])
+x=np.hstack([x, -x])
+np.vstack([y,x]).T
+
+
+import plotly.express as px
+fig=px.scatter_3d(df, x='X1', y='X2', z='X1_X2', color='Y')
+fig.show()
+
+classifierRBF=SVC(kernel='rbf')
+classifierRBF.fit(X_train, Y_train)
+
+
+Web scrapping Tools
+
+ 
